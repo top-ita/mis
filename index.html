@@ -1,19 +1,19 @@
 <!doctype html>
 <html>
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
 <title>Markmap</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/taveevut/lazysource@1.0.8/thai-web-fonts/Iconic/iconic.css">
 <style>
 * {
-  margin: 0;
-  padding: 0;
-}
-html {
-  font-family: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-}
+						margin: 0;
+						padding: 0;
+						font-family: 'Iconic' !important;
+						font-weight: 500;
+				}
 #mindmap {
   display: block;
   width: 100vw;
@@ -23,8 +23,19 @@ html {
   background: #27272a;
   color: white;
 }
+
+.markmap {
+    --markmap-max-width: 9999px;
+    --markmap-a-color: #0097e6;
+    --markmap-a-hover-color: #00a8ff;
+    --markmap-code-bg: #f0f0f0;
+    --markmap-code-color: #555;
+    --markmap-highlight-bg: #ffeaa7;
+    --markmap-table-border: 1px solid currentColor;
+    --markmap-font: 300 16px / 20px Iconic;
+}
 </style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/style.css">
+
 </head>
 <body>
 <svg id="mindmap"></svg>
