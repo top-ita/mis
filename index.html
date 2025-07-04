@@ -1,55 +1,545 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="th">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title>Markmap</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/style.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/taveevut/lazysource@1.0.8/thai-web-fonts/Iconic/iconic.css">
-<style>
-* {
-						margin: 0;
-						padding: 0;
-						font-family: 'Iconic' !important;
-						font-weight: 500;
-				}
-#mindmap {
-  display: block;
-  width: 100vw;
-  height: 100vh;
-}
-.markmap-dark {
-  background: #27272a;
-  color: white;
-}
-</style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+  <title>ระบบภาพรวมของมหาวิทยาลัย</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap');
+
+    body {
+      font-family: 'Sarabun', 'Kanit', sans-serif;
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 25%, #ee9ca7 50%, #ffdde1 75%, #c3cfe2 100%);
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    .presentation-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .slide {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      margin: 30px 0;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transform: translateY(20px);
+      opacity: 0;
+      animation: slideIn 0.8s ease-out forwards;
+    }
+
+    .slide:nth-child(1) {
+      animation-delay: 0.2s;
+    }
+
+    .slide:nth-child(2) {
+      animation-delay: 0.4s;
+    }
+
+    .slide:nth-child(3) {
+      animation-delay: 0.6s;
+    }
+
+    .slide:nth-child(4) {
+      animation-delay: 0.8s;
+    }
+
+    @keyframes slideIn {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .slide-title {
+      font-family: 'Kanit', sans-serif;
+      font-size: 2.5em;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 30px;
+      background: linear-gradient(45deg, #e91e63, #9c27b0, #6a1b9a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+    }
+
+    .slide-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(45deg, #e91e63, #9c27b0);
+      border-radius: 2px;
+    }
+
+    .section-title {
+      font-family: 'Kanit', sans-serif;
+      font-size: 1.8em;
+      font-weight: 600;
+      color: #4a4a4a;
+      margin-bottom: 20px;
+      padding-left: 20px;
+      border-left: 5px solid #e91e63;
+      position: relative;
+    }
+
+    .problem-list,
+    .solution-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .problem-item,
+    .solution-item {
+      background: rgba(255, 255, 255, 0.8);
+      margin: 15px 0;
+      padding: 20px;
+      border-radius: 15px;
+      border-left: 5px solid #e74c3c;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .solution-item {
+      border-left-color: #27ae60;
+    }
+
+    .problem-item:hover,
+    .solution-item:hover {
+      transform: translateX(5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .problem-item::before {
+      content: '⚠️';
+      position: absolute;
+      left: -15px;
+      top: 20px;
+      font-size: 1.2em;
+      background: white;
+      padding: 5px;
+      border-radius: 50%;
+    }
+
+    .solution-item::before {
+      content: '✅';
+      position: absolute;
+      left: -15px;
+      top: 20px;
+      font-size: 1.2em;
+      background: white;
+      padding: 5px;
+      border-radius: 50%;
+    }
+
+    .item-number {
+      font-weight: bold;
+      color: #667eea;
+      font-size: 1.1em;
+      margin-bottom: 8px;
+    }
+
+    .item-text {
+      line-height: 1.6;
+      font-size: 1.1em;
+      text-align: justify;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-top: 30px;
+    }
+
+    .summary-card {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      border-top: 4px solid #667eea;
+    }
+
+    .summary-card h3 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+      font-size: 1.3em;
+    }
+
+    .summary-card p {
+      line-height: 1.6;
+      color: #5a5a5a;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 3px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      width: 0%;
+      animation: fillProgress 2s ease-out forwards;
+    }
+
+    @keyframes fillProgress {
+      to {
+        width: 100%;
+      }
+    }
+
+    .nav-buttons {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      display: flex;
+      gap: 15px;
+      z-index: 1000;
+    }
+
+    .nav-btn {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 15px 20px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .slide-counter {
+      position: fixed;
+      top: 30px;
+      right: 30px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-weight: bold;
+      color: #667eea;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+    }
+
+    .erp-overview {
+      margin: 30px 0;
+    }
+
+    .erp-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .erp-title {
+      font-size: 2.5em;
+      font-weight: bold;
+      background: linear-gradient(45deg, #e74c3c, #f39c12);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+
+    .erp-subtitle {
+      font-size: 1.2em;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .systems-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+
+    .system-category {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      border-left: 5px solid #3498db;
+    }
+
+    .category-title {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #ecf0f1;
+    }
+
+    .system-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 10px;
+    }
+
+    .system-item {
+      background: rgba(52, 152, 219, 0.1);
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 0.95em;
+      color: #2c3e50;
+      border-left: 3px solid #3498db;
+      transition: all 0.3s ease;
+    }
+
+    .system-item:hover {
+      background: rgba(52, 152, 219, 0.2);
+      transform: translateX(5px);
+    }
+
+    @media (max-width: 768px) {
+      .slide {
+        padding: 25px;
+        margin: 20px 0;
+      }
+
+      .slide-title {
+        font-size: 2em;
+      }
+
+      .erp-title {
+        font-size: 2em;
+      }
+
+      .erp-subtitle {
+        font-size: 1em;
+      }
+
+      .system-list {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .nav-buttons {
+        bottom: 20px;
+        right: 20px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<svg id="mindmap"></svg>
-<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script><script src="https://cdn.jsdelivr.net/npm/markmap-view@0.18.12/dist/browser/index.js"></script><script src="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/index.js"></script><script>(r => {
-              setTimeout(r);
-            })(function renderToolbar() {
-  const {
-    markmap,
-    mm
-  } = window;
-  const {
-    el
-  } = markmap.Toolbar.create(mm);
-  el.setAttribute('style', 'position:absolute;bottom:20px;right:20px');
-  document.body.append(el);
-})</script><script>((getMarkmap, getOptions, root2, jsonOptions) => {
-              const markmap = getMarkmap();
-              window.mm = markmap.Markmap.create(
-                "svg#mindmap",
-                (getOptions || markmap.deriveOptions)(jsonOptions),
-                root2
-              );
-              if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-                document.documentElement.classList.add("markmap-dark");
-              }
-            })(() => window.markmap,null,{"content":"MIS","children":[{"content":"&#xe1e;&#xe31;&#xe12;&#xe19;&#xe32;&#xe02;&#xe36;&#xe49;&#xe19;&#xe21;&#xe32;&#xe40;&#xe2d;&#xe07;","children":[{"content":"&#xe23;&#xe30;&#xe14;&#xe31;&#xe1a;&#xe21;&#xe2b;&#xe32;&#xe27;&#xe34;&#xe17;&#xe22;&#xe32;&#xe25;&#xe31;&#xe22;","children":[{"content":"<a href=\"https://erp.yru.ac.th/apps/?update=16012023\">&#xe23;&#xe30;&#xe1a;&#xe1a;&#xe1a;&#xe23;&#xe34;&#xe2b;&#xe32;&#xe23;&#xe08;&#xe31;&#xe14;&#xe01;&#xe32;&#xe23;&#xe17;&#xe23;&#xe31;&#xe1e;&#xe22;&#xe32;&#xe01;&#xe23;&#xe2d;&#xe07;&#xe04;&#xe4c;&#xe01;&#xe23; (ERP)</a>","children":[],"payload":{"tag":"li","lines":"3,4"}},{"content":"<a href=\"https://hrm.yru.ac.th/main/login?c=Main&amp;a=index\">&#xe23;&#xe30;&#xe1a;&#xe1a;&#xe1a;&#xe38;&#xe04;&#xe25;&#xe32;&#xe01;&#xe23; (HRM)</a>","children":[],"payload":{"tag":"li","lines":"4,5"}},{"content":"<a href=\"https://obe.yru.ac.th\">&#xe23;&#xe30;&#xe1a;&#xe1a;&#xe1a;&#xe23;&#xe34;&#xe2b;&#xe32;&#xe23;&#xe02;&#xe49;&#xe2d;&#xe21;&#xe39;&#xe25;&#xe2b;&#xe25;&#xe31;&#xe01;&#xe2a;&#xe39;&#xe15;&#xe23; (OBE)</a>","children":[],"payload":{"tag":"li","lines":"5,6"}},{"content":"<a href=\"https://competency.yru.ac.th/\">&#xe23;&#xe30;&#xe1a;&#xe1a;&#xe01;&#xe32;&#xe23;&#xe1b;&#xe23;&#xe30;&#xe40;&#xe21;&#xe34;&#xe19;&#xe2a;&#xe21;&#xe23;&#xe23;&#xe16;&#xe19;&#xe30;&#xe41;&#xe25;&#xe30;&#xe1c;&#xe25;&#xe01;&#xe32;&#xe23;&#xe1b;&#xe0f;&#xe34;&#xe1a;&#xe31;&#xe15;&#xe34;&#xe23;&#xe32;&#xe0a;&#xe01;&#xe32;&#xe23; (Competency)</a>","children":[],"payload":{"tag":"li","lines":"6,7"}},{"content":"<a href=\"https://service.yru.ac.th/\">&#xe23;&#xe30;&#xe1a;&#xe1a;&#xe23;&#xe31;&#xe1a;&#xe40;&#xe23;&#xe37;&#xe48;&#xe2d;&#xe07;&#xe01;&#xe32;&#xe23;&#xe43;&#xe2b;&#xe49;&#xe1a;&#xe23;&#xe34;&#xe01;&#xe32;&#xe23;&#xe2a;&#xe32;&#xe23;&#xe2a;&#xe19;&#xe40;&#xe17;&#xe28; (SERVICE)</a>","children":[],"payload":{"tag":"li","lines":"7,8"}},{"content":"<a href=\"https://memo.yru.ac.th/login\">&#xe23;&#xe30;&#xe1a;&#xe1a;&#xe1a;&#xe31;&#xe19;&#xe17;&#xe36;&#xe01;&#xe02;&#xe49;&#xe2d;&#xe15;&#xe01;&#xe25;&#xe07;&#xe2a;&#xe31;&#xe0d;&#xe0d;&#xe32;&#xe04;&#xe27;&#xe32;&#xe21;&#xe23;&#xe48;&#xe27;&#xe21;&#xe21;&#xe37;&#xe2d; MOU/MOA</a>","children":[],"payload":{"tag":"li","lines":"8,9"}},{"content":"<a href=\"https://research.yru.ac.th/\">&#xe23;&#xe30;&#xe1a;&#xe1a;&#xe2a;&#xe32;&#xe23;&#xe2a;&#xe19;&#xe40;&#xe17;&#xe28;&#xe07;&#xe32;&#xe19;&#xe27;&#xe34;&#xe08;&#xe31;&#xe22;&#xe41;&#xe25;&#xe30;&#xe19;&#xe27;&#xe31;&#xe15;&#xe01;&#xe23;&#xe23;&#xe21;</a>","children":[],"payload":{"tag":"li","lines":"9,10"}},{"content":"<a href=\"https://ebooking.yru.ac.th/login/\">&#xe23;&#xe30;&#xe1a;&#xe1a;&#xe08;&#xe2d;&#xe07;</a>","children":[{"content":"1. &#xe08;&#xe2d;&#xe07;&#xe2b;&#xe49;&#xe2d;&#xe07;&#xe04;&#xe49;&#xe19;&#xe04;&#xe27;&#xe49;&#xe32;","children":[],"payload":{"tag":"li","lines":"11,12","listIndex":1}},{"content":"2. &#xe08;&#xe2d;&#xe07;&#xe2b;&#xe49;&#xe2d;&#xe07;&#xe1b;&#xe0f;&#xe34;&#xe1a;&#xe31;&#xe15;&#xe34;&#xe01;&#xe32;&#xe23;","children":[],"payload":{"tag":"li","lines":"12,13","listIndex":2}},{"content":"3. &#xe08;&#xe2d;&#xe07; Zoom","children":[],"payload":{"tag":"li","lines":"13,14","listIndex":3}},{"content":"4. &#xe08;&#xe2d;&#xe07;&#xe2b;&#xe49;&#xe2d;&#xe07;&#xe1b;&#xe23;&#xe30;&#xe0a;&#xe38;&#xe21;","children":[],"payload":{"tag":"li","lines":"14,15","listIndex":4}},{"content":"5. &#xe08;&#xe2d;&#xe07;&#xe23;&#xe16;","children":[],"payload":{"tag":"li","lines":"15,16","listIndex":5}}],"payload":{"tag":"li","lines":"10,16"}},{"content":"<a href=\"https://edoc.yru.ac.th/login/\">&#xe23;&#xe30;&#xe1a;&#xe1a;&#xe2a;&#xe32;&#xe23;&#xe1a;&#xe23;&#xe23;&#xe13;&#xe2d;&#xe34;&#xe40;&#xe25;&#xe47;&#xe01;&#xe17;&#xe23;&#xe2d;&#xe19;&#xe34;&#xe01;&#xe2a;&#xe4c;</a>","children":[],"payload":{"tag":"li","lines":"16,17"}},{"content":"Mobile Appication <mark>YRU Connect</mark><br>\n<code>&#xe25;&#xe07;&#xe40;&#xe27;&#xe25;&#xe32;&#xe1b;&#xe0f;&#xe34;&#xe1a;&#xe31;&#xe15;&#xe34;&#xe07;&#xe32;&#xe19;, &#xe43;&#xe1a;&#xe41;&#xe08;&#xe49;&#xe07;&#xe2b;&#xe19;&#xe35;&#xe49; &#xe2f;&#xe25;&#xe2f;</code>","children":[],"payload":{"tag":"li","lines":"17,19"}},{"content":"&#xe40;&#xe27;&#xe47;&#xe1a;&#xe44;&#xe0b;&#xe15;&#xe4c;&#xe2a;&#xe33;&#xe40;&#xe23;&#xe47;&#xe08;&#xe23;&#xe39;&#xe1b; (CMS)<br>\n<code>&#xe17;&#xe31;&#xe49;&#xe07;&#xe2b;&#xe21;&#xe14; 158 &#xe23;&#xe30;&#xe1a;&#xe1a;</code>","children":[],"payload":{"tag":"li","lines":"19,21"}},{"content":"<a href=\"https://activity.yru.ac.th/\">&#xe23;&#xe30;&#xe1a;&#xe1a;&#xe1a;&#xe23;&#xe34;&#xe2b;&#xe32;&#xe23;&#xe01;&#xe34;&#xe08;&#xe01;&#xe23;&#xe23;&#xe21;&#xe19;&#xe31;&#xe01;&#xe28;&#xe36;&#xe01;&#xe29;&#xe32; (Activity)</a>","children":[],"payload":{"tag":"li","lines":"21,22"}},{"content":"[&#xe23;&#xe30;&#xe1a;&#xe1a;&#xe0a;&#xe33;&#xe23;&#xe30;&#xe40;&#xe07;&#xe34;&#xe19;&#xe1c;&#xe48;&#xe32;&#xe19;&#xe04;&#xe34;&#xe27;&#xe2d;&#xe32;&#xe23;&#xe4c;&#xe42;&#xe04;&#xe4a;&#xe14; QR-Cash]<br>\n<code>&#xe04;&#xe48;&#xe32;&#xe44;&#xe1f;, &#xe04;&#xe48;&#xe32;&#xe2b;&#xe2d;&#xe1e;&#xe31;&#xe01;, &#xe04;&#xe48;&#xe32;&#xe40;&#xe17;&#xe2d;&#xe21;</code>","children":[],"payload":{"tag":"li","lines":"22,24"}},{"content":"<a href=\"https://bundit.yru.ac.th/\">&#xe23;&#xe32;&#xe22;&#xe07;&#xe32;&#xe19;&#xe15;&#xe31;&#xe27;&#xe1a;&#xe31;&#xe13;&#xe11;&#xe34;&#xe15;</a>","children":[],"payload":{"tag":"li","lines":"24,25"}},{"content":"<a href=\"https://center.alumni.yru.ac.th/login\">&#xe23;&#xe30;&#xe1a;&#xe1a;&#xe10;&#xe32;&#xe19;&#xe02;&#xe49;&#xe2d;&#xe21;&#xe39;&#xe25;&#xe28;&#xe34;&#xe29;&#xe22;&#xe4c;&#xe40;&#xe01;&#xe48;&#xe32; &#xe21;&#xe23;&#xe22;.</a>","children":[],"payload":{"tag":"li","lines":"25,26"}},{"content":"<a href=\"https://command.yru.ac.th/main\">&#xe23;&#xe30;&#xe1a;&#xe1a; e-Command</a>","children":[],"payload":{"tag":"li","lines":"26,27"}}],"payload":{"tag":"h3","lines":"2,3"}},{"content":"&#xe23;&#xe30;&#xe14;&#xe31;&#xe1a;&#xe2a;&#xe33;&#xe19;&#xe31;&#xe01; (&#xe2a;&#xe27;&#xe17;.)","children":[{"content":"<a href=\"https://tracks.yru.ac.th/login\">Tracks</a>","children":[],"payload":{"tag":"li","lines":"28,29"}},{"content":"<a href=\"https://eborrow.yru.ac.th/login.php\">e-Borrow</a>","children":[],"payload":{"tag":"li","lines":"29,30"}},{"content":"<a href=\"https://joins.yru.ac.th/login\">Join</a>","children":[],"payload":{"tag":"li","lines":"30,31"}}],"payload":{"tag":"h3","lines":"27,28"}}],"payload":{"tag":"h2","lines":"1,2"}},{"content":"&#xe08;&#xe49;&#xe32;&#xe07;&#xe1e;&#xe31;&#xe12;&#xe19;&#xe32;","children":[{"content":"<a href=\"https://register.yru.ac.th/registrar/home\">Register</a>","children":[],"payload":{"tag":"li","lines":"32,33"}},{"content":"<a href=\"https://booking.yru.ac.th/login\">Smart Booking</a>","children":[],"payload":{"tag":"li","lines":"33,34"}}],"payload":{"tag":"h2","lines":"31,32"}}],"payload":{"tag":"h1","lines":"0,1"}},{})</script>
+  <div class="presentation-container">
+    <div class="slide-counter">
+      <span id="currentSlide">1</span> / <span id="totalSlides">4</span>
+    </div>
+
+    <!-- Slide 1: Title -->
+    <div class="slide"
+         id="slide1">
+      <h1 class="slide-title">ระบบภาพรวมของมหาวิทยาลัย</h1>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+
+      <!-- YRU ERP Overview -->
+      <div class="erp-overview">
+        <div class="erp-header">
+          <h2 class="erp-title">YRU ERP</h2>
+          <p class="erp-subtitle">ระบบซอฟต์แวร์ที่ช่วยบริหารจัดการทรัพยากรขององค์กรแบบรวมศูนย์<br>มหาวิทยาลัยราชภัฏยะลา</p>
+        </div>
+
+        <div class="systems-grid">
+          <div class="system-category">
+            <h3 class="category-title">🏗️ พัฒนาเอง - ระดับมหาวิทยาลัย</h3>
+            <div class="system-list">
+              <div class="system-item">ระบบจัดการแผนและงบประมาณ (ERP)</div>
+              <div class="system-item">ระบบบริหารข้อมูลหลักสูตร (OBE)</div>
+              <div class="system-item">ระบบรับเรื่องการให้บริการสารสนเทศ (SERVICE)</div>
+              <div class="system-item">ระบบบันทึกข้อตกลงสัญญาความร่วมมือ MOU/MOA</div>
+              <div class="system-item">ระบบสารสนเทศงานวิจัยและนวัตกรรม</div>
+              <div class="system-item">ระบบจอง (ห้องค้นคว้า, ห้องปฏิบัติการ, Zoom, ห้องประชุม, รถ)</div>
+              <div class="system-item">ระบบสารบรรณอิเล็กทรอนิกส์ (E-Document)</div>
+              <div class="system-item">เว็บไซต์สำเร็จรูป (CMS) ทั้งหมด 158 เว็บ</div>
+              <div class="system-item">ระบบฐานข้อมูลศิษย์เก่า มรย.</div>
+              <div class="system-item">รายงานตัวบัณฑิต</div>
+              <div class="system-item">ระบบ e-Command</div>
+              <div class="system-item">ระบบ e-Profile</div>
+              <div class="system-item">ระบบจัดการข้อมูลหอพักนักศึกษา</div>
+              <div class="system-item">ระบบบริการการศึกษา [YRU REG]</div>
+              <div class="system-item">ระบบ PassportThaiD</div>
+            </div>
+          </div>
+
+          <div class="system-category">
+            <h3 class="category-title">🏢 พัฒนาเอง - ระดับสำนัก (สวท.)</h3>
+            <div class="system-list">
+              <div class="system-item">ระบบบันทึกการปฏิบัติงาน Tracks</div>
+              <div class="system-item">ระบบยืม-คืนวัสดุสำนักงาน e-Borrow</div>
+              <div class="system-item">ระบบจัดการข้อมูลการมีส่วนร่วมในองค์กร</div>
+            </div>
+          </div>
+
+          <div class="system-category">
+            <h3 class="category-title">💼 จ้างพัฒนา</h3>
+            <div class="system-list">
+              <div class="system-item">ระบบ REGISTER Vision Net</div>
+              <div class="system-item">ระบบ SMART BOOKING</div>
+              <div class="system-item">WALAI AutoLib ระบบห้องสมุดอัตโนมัติ</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-card">
+          <h3>🎯 วัตถุประสงค์</h3>
+          <p>วิเคราะห์ปัญหาและเสนอแนวทางการพัฒนาระบบสารสนเทศของมหาวิทยาลัยให้มีประสิทธิภาพและคุณภาพ</p>
+        </div>
+        <div class="summary-card">
+          <h3>📊 ภาพรวม</h3>
+          <p>ระบบงานปัจจุบันประสบปัญหาด้านมาตรฐาน การกำกับดูแล และโครงสร้างองค์กร ต้องการการปรับปรุงอย่างเร่งด่วน</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 2: Problems -->
+    <div class="slide"
+         id="slide2">
+      <h2 class="section-title">🚨 ปัญหาที่พบ</h2>
+      <ul class="problem-list">
+        <li class="problem-item">
+          <div class="item-number">ปัญหาที่ 1:</div>
+          <div class="item-text">องค์กรยังไม่มีการกำหนดมาตรฐานในการดำเนินงานด้านการพัฒนาซอฟต์แวร์อย่างชัดเจน ส่งผลให้ขาดแนวทางที่เป็นระบบและไม่สามารถควบคุมคุณภาพงานได้อย่างมีประสิทธิภาพ</div>
+        </li>
+        <li class="problem-item">
+          <div class="item-number">ปัญหาที่ 2:</div>
+          <div class="item-text">ขาดบุคลากรหรือบทบาทที่ชัดเจนในการกำกับดูแลและตัดสินใจเชิงนโยบายด้านการพัฒนาระบบ ทำให้เกิดความล่าช้าในการดำเนินงานและขาดทิศทาง</div>
+        </li>
+        <li class="problem-item">
+          <div class="item-number">ปัญหาที่ 3:</div>
+          <div class="item-text">โครงสร้างองค์กรที่มีอยู่ไม่สอดคล้องกับโครงสร้างการบริหารงาน ส่งผลให้เกิดความซ้ำซ้อนของบทบาทหน้าที่และขาดความคล่องตัวในการบริหารจัดการ</div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Slide 3: Solutions -->
+    <div class="slide"
+         id="slide3">
+      <h2 class="section-title">💡 แนวทางแก้ไข</h2>
+      <ul class="solution-list">
+        <li class="solution-item">
+          <div class="item-number">แนวทางที่ 1:</div>
+          <div class="item-text">จัดจ้างผู้เชี่ยวชาญที่มีประสบการณ์ด้านการพัฒนาซอฟต์แวร์ เพื่อออกแบบและกำหนดมาตรฐานกระบวนการพัฒนาระบบสารสนเทศของหน่วยงานอย่างครบวงจร ตั้งแต่ขั้นตอนการวางแผน วิเคราะห์ ออกแบบ พัฒนา ทดสอบ ไปจนถึงการส่งมอบและบำรุงรักษาระบบ ตลอดจนถึงบังคับให้ทำตามมาตรฐานที่กำหนดไว้</div>
+        </li>
+        <li class="solution-item">
+          <div class="item-number">แนวทางที่ 2:</div>
+          <div class="item-text">จัดตั้งคณะกรรมการหรือคณะทำงานด้านระบบสารสนเทศ (IT Governance Board) ประกอบด้วยตัวแทนจากฝ่ายบริหาร ผู้ปฏิบัติงาน และฝ่ายพัฒนา มีอำนาจให้ความเห็นชอบด้านนโยบาย ทิศทางโครงการ และการจัดลำดับความสำคัญของระบบงาน</div>
+        </li>
+        <li class="solution-item">
+          <div class="item-number">แนวทางที่ 3:</div>
+          <div class="item-text">ออกแบบโครงสร้างบริหารใหม่ที่สะท้อนภารกิจที่แท้จริง โดยเฉพาะในด้านที่เกี่ยวข้องกับเทคโนโลยีสารสนเทศ การบริหารโครงการ และงานพัฒนา</div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Slide 4: Summary -->
+    <div class="slide"
+         id="slide4">
+      <h2 class="section-title">📈 สรุปและข้อเสนอแนะ</h2>
+      <div class="summary-grid">
+        <div class="summary-card">
+          <h3>🎯 เป้าหมายหลัก</h3>
+          <p>สร้างระบบการบริหารจัดการที่มีประสิทธิภาพ มีมาตรฐาน และสามารถควบคุมคุณภาพได้</p>
+        </div>
+        <div class="summary-card">
+          <h3>⚡ ขั้นตอนดำเนินการ</h3>
+          <p>1. จัดหาผู้เชี่ยวชาญ<br>2. จัดตั้งคณะกรรมการ IT<br>3. ปรับโครงสร้างองค์กร</p>
+        </div>
+        <div class="summary-card">
+          <h3>📊 ผลลัพธ์ที่คาดหวัง</h3>
+          <p>ลดความซ้ำซ้อน เพิ่มประสิทธิภาพการทำงาน และควบคุมคุณภาพระบบได้ดีขึ้น</p>
+        </div>
+        <div class="summary-card">
+          <h3>⏱️ ความสำคัญเร่งด่วน</h3>
+          <p>ต้องดำเนินการทันทีเพื่อแก้ไขปัญหาที่ส่งผลกระทบต่อการดำเนินงานของมหาวิทยาลัย</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="nav-btn"
+            onclick="prevSlide()">← ก่อนหน้า</button>
+    <button class="nav-btn"
+            onclick="nextSlide()">ถัดไป →</button>
+  </div>
+
+  <script>
+    let currentSlideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    document.getElementById('totalSlides').textContent = totalSlides;
+
+    function showSlide(index) {
+      slides.forEach(slide => slide.style.display = 'none');
+      slides[index].style.display = 'block';
+      document.getElementById('currentSlide').textContent = index + 1;
+    }
+
+    function nextSlide() {
+      currentSlideIndex = (currentSlideIndex + 1) % totalSlides;
+      showSlide(currentSlideIndex);
+    }
+
+    function prevSlide() {
+      currentSlideIndex = (currentSlideIndex - 1 + totalSlides) % totalSlides;
+      showSlide(currentSlideIndex);
+    }
+
+    // Initialize
+    showSlide(0);
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        prevSlide();
+      }
+    });
+
+    // Auto-advance slides (optional)
+    // setInterval(nextSlide, 10000); // Uncomment to auto-advance every 10 seconds
+  </script>
 </body>
+
 </html>
